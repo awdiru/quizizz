@@ -7,14 +7,14 @@
     margin-top: 30px;
 }
 
-#passwordInput {
+.login-input {
     width: 300px;
-    height: 20px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-family: Arial, sans-serif;
-    resize: vertical;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 #loginButton {
@@ -25,6 +25,7 @@
     cursor: pointer;
     border-radius: 4px;
     font-size: 16px;
+    width: 300px;
 }
 
 #loginButton:hover {

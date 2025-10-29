@@ -9,7 +9,8 @@ import lombok.*;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class LoginDto {
-    private String name;
-    private String password;
+public class LoginResponse {
+    private int status;
+    private String message;
+    private String token;
 }

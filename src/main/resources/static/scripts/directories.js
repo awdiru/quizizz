@@ -5,6 +5,11 @@ let currentPath = '.'; // Будем хранить текущий путь
 
 // Загрузка директории при старте
 document.addEventListener('DOMContentLoaded', () => {
+    // Проверяем авторизацию при загрузке страницы
+    if (!checkAuthOnLoad()) {
+        return;
+    }
+
     loadDirectory('.');
 
     // Обработчики для создания директории
@@ -34,7 +39,7 @@ async function loadDirectory(path) {
         currentPath = path; // Сохраняем текущий путь
 
         const encodedPath = encodeURIComponent(path);
-        const response = await fetch(`${API_BASE}?path=${encodedPath}`);
+        const response = await fetchWithAuth(`${API_BASE}?path=${encodedPath}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -46,7 +51,10 @@ async function loadDirectory(path) {
         renderContent(data.children, data.path);
     } catch (error) {
         console.error('Ошибка загрузки:', error);
-        document.getElementById('content').innerHTML = '<div class="error">Ошибка загрузки: ' + error.message + '</div>';
+        // Не показываем ошибку, если это редирект на авторизацию
+        if (!error.message.includes('авторизация') && !error.message.includes('токен')) {
+            document.getElementById('content').innerHTML = '<div class="error">Ошибка загрузки: ' + error.message + '</div>';
+        }
     }
 }
 
@@ -140,7 +148,7 @@ async function createDirectory(dirName) {
         // Формируем полный путь к новой директории
         const newDirPath = currentPath === '.' ? `./${dirName}` : `${currentPath}/${dirName}`;
 
-        const response = await fetch(API_CREATE, {
+        const response = await fetchWithAuth(API_CREATE, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -159,6 +167,9 @@ async function createDirectory(dirName) {
 
     } catch (error) {
         console.error('Ошибка создания директории:', error);
-        alert('Ошибка при создании директории: ' + error.message);
+        // Не показываем ошибку, если это редирект на авторизацию
+        if (!error.message.includes('авторизация') && !error.message.includes('токен')) {
+            alert('Ошибка при создании директории: ' + error.message);
+        }
     }
 }

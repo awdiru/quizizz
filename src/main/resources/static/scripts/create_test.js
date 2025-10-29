@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем авторизацию при загрузке страницы
+    if (!checkAuthOnLoad()) {
+        return;
+    }
+
     const questionsContainer = document.getElementById('questionsContainer');
     const addQuestionBtn = document.getElementById('addQuestionBtn');
     const createTestBtn = document.getElementById('createTestBtn');
@@ -73,11 +78,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function createTest() {
+    async function createTest() {
         const testName = testNameInput.value.trim();
 
         if (!testName) {
             alert('Введите название теста');
+            testNameInput.focus();
             return;
         }
 
@@ -89,12 +95,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        let hasError = false;
+
         questionElements.forEach((questionElement, questionIndex) => {
             const questionInput = questionElement.querySelector('.question-input');
             const questionText = questionInput.value.trim();
 
             if (!questionText) {
                 alert(`Введите текст для вопроса ${questionIndex + 1}`);
+                questionInput.focus();
+                hasError = true;
                 return;
             }
 
@@ -103,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (answerElements.length === 0) {
                 alert(`Добавьте хотя бы один ответ для вопроса "${questionText}"`);
+                hasError = true;
                 return;
             }
 
@@ -113,6 +124,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (!answerText) {
                     alert(`Введите текст для ответа ${answerIndex + 1} в вопросе "${questionText}"`);
+                    answerInput.focus();
+                    hasError = true;
                     return;
                 }
 
@@ -123,11 +136,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            questions.push({
-                question: questionText,
-                answers: answers
-            });
+            if (!hasError) {
+                questions.push({
+                    question: questionText,
+                    answers: answers
+                });
+            }
         });
+
+        if (hasError) {
+            return;
+        }
 
         // Получаем текущий путь из URL параметров
         const urlParams = new URLSearchParams(window.location.search);
@@ -137,27 +156,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const testPath = currentPath === '.' ? `./${testName}` : `${currentPath}/${testName}`;
 
         // Отправляем запрос на создание теста
-        fetch('http://localhost:8080/tests/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                path: testPath,
-                questions: questions
-            })
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('Тест успешно создан!');
-                    window.location.href = '../directories/directories.html';
-                } else {
-                    throw new Error('Ошибка при создании теста');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                alert('Ошибка при создании теста: ' + error.message);
+        try {
+            const response = await fetchWithAuth('http://localhost:8080/tests/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    path: testPath,
+                    questions: questions
+                })
             });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при создании теста');
+            }
+
+            alert('Тест успешно создан!');
+            window.location.href = '../directories/directories.html';
+        } catch (error) {
+            console.error('Ошибка:', error);
+            // Не показываем ошибку, если это редирект на авторизацию
+            if (!error.message.includes('авторизация') && !error.message.includes('токен')) {
+                alert('Ошибка при создании теста: ' + error.message);
+            }
+        }
     }
 });

@@ -24,6 +24,19 @@ public class EncryptionService {
     @Value("${encryption.key}")
     private String secretKey;
 
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    private final SecureRandom random = new SecureRandom();
+
+    public String generateRandomString() {
+        StringBuilder sb = new StringBuilder(32);
+        for (int i = 0; i < 32; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(index));
+        }
+        return sb.toString();
+    }
+
     private SecretKeySpec getSecretKeySpec() {
         return getSecretKeySpec("");
     }
