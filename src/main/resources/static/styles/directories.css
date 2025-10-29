@@ -1,0 +1,99 @@
+/* Стили для файлового менеджера */
+.directory {
+    cursor: pointer;
+    color: blue;
+    margin: 5px 0;
+    padding: 5px;
+}
+.directory:hover {
+    text-decoration: underline;
+    background-color: #f0f0f0;
+}
+.file {
+    color: gray;
+    margin: 5px 0;
+    padding: 5px;
+}
+.parent-directory {
+    cursor: pointer;
+    color: #666;
+    margin: 5px 0;
+    padding: 5px;
+    font-style: italic;
+}
+.parent-directory:hover {
+    text-decoration: underline;
+    background-color: #f0f0f0;
+}
+.breadcrumb {
+    flex-grow: 1;
+}
+.breadcrumb a {
+    cursor: pointer;
+    color: blue;
+    margin-right: 5px;
+}
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+.breadcrumb span:last-child {
+    color: black;
+    cursor: default;
+}
+.breadcrumb span:last-child:hover {
+    text-decoration: none;
+}
+.empty-dir {
+    color: #666;
+    font-style: italic;
+    padding: 10px;
+}
+.error {
+    color: red;
+    padding: 10px;
+}
+.loading {
+    padding: 10px;
+}
+.controls {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 150px;
+}
+.create-dir-btn {
+    background-color: #bcbcbc;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+.create-dir-btn:hover {
+    background-color: #8f8f8f;
+}
+.create-test-btn {
+    background-color: #bcbcbc;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+.create-test-btn:hover {
+    background-color: #8f8f8f;
+}
+.create-dir-input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 250px;
+}

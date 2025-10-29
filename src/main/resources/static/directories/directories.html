@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Файловый менеджер</title>
+    <link rel="stylesheet" href="../styles/default.css">
+    <link rel="stylesheet" href="../styles/directories.css">
+</head>
+<body>
+<div class="container">
+    <h1>Файловый менеджер</h1>
+    <div class="controls">
+        <div class="breadcrumb" id="breadcrumb">
+            <a onclick="loadDirectory('./')">Корневая директория</a>
+        </div>
+        <div class="actions">
+            <button id="createTestBtn" class="create-test-btn">Создать тест</button>
+            <button id="createDirBtn" class="create-dir-btn">Создать директорию</button>
+            <input type="text" id="createDirInput" class="create-dir-input" placeholder="Введите имя директории" style="display: none;">
+        </div>
+    </div>
+    <div id="content">
+        <div class="loading">Загрузка...</div>
+    </div>
+</div>
+
+<script src="../scripts/directories.js"></script>
+</body>
+</html>
