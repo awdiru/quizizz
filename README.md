@@ -43,7 +43,7 @@ POST /login
   "token": "auth_token_here"
 }
 ```
-### 📝 Регистрация
+#### 📝 Регистрация
 POST /register
 
 Тело запроса:
@@ -62,7 +62,7 @@ POST /register
   "message": "Register successful. Wait for the employer's confirmation"
 }
 ```
-### ✅ Подтверждение регистрации
+#### ✅ Подтверждение регистрации
 GET /confirmed?login={login}&token={token}
 
 Успешный ответ:
@@ -73,7 +73,7 @@ GET /confirmed?login={login}&token={token}
   "message": "User registration {login} has been successfully completed"
 }
 ```
-### ✏️ Обновление данных пользователя
+#### ✏️ Обновление данных пользователя
 POST /update
 
 Тело запроса:
