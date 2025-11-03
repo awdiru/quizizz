@@ -1,5 +1,6 @@
-const API_BASE = 'http://localhost:8080/directory/get';
-const API_CREATE = 'http://localhost:8080/directory/create';
+const SERVER_ADDRESS = 'http://localhost:8080'
+const API_BASE = SERVER_ADDRESS + '/directory/get';
+const API_CREATE = SERVER_ADDRESS + '/directory/create';
 
 let currentPath = '.'; // Будем хранить текущий путь
 

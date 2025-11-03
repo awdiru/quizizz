@@ -67,11 +67,11 @@ public class LoginController extends AbstractController {
         }
     }
 
-    @PostMapping("/sregister")
+    @PostMapping("/update")
     @PublicEndpoint
     public ResponseEntity<Object> confirmedRegister(@RequestBody LoginDto loginDto) {
         try {
-            registerService.secretRegister(loginDto);
+            registerService.updateTeacher(loginDto);
             return getStandardResponse("Register successful");
         } catch (Exception e) {
             return getErrorResponse(e.getMessage(), 401);

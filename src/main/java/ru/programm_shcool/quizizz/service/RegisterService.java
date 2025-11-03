@@ -31,9 +31,6 @@ public class RegisterService {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-    @Value("${spring.mail.password}")
-    private String password;
-
     public boolean validateTeacher(String login, String password) {
         Teacher teacher = registerRepository.findByLogin(login)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid login"));
@@ -44,26 +41,29 @@ public class RegisterService {
 
     public void registerTeacher(LoginDto loginDto) {
         try {
+            if (loginDto.getLogin().length() < 2 || loginDto.getLogin().length() > 31)
+                throw new IllegalArgumentException("Login length must be between 2 and 30 characters");
+
             Teacher teacher = Teacher.builder()
                     .login(loginDto.getLogin())
                     .password(encryptionService.encrypt(loginDto.getPassword(), loginDto.getLogin()))
-                    .email(loginDto.getEmail())
+                    .email(encryptionService.encrypt(loginDto.getEmail(), loginDto.getLogin()))
                     .build();
 
             String temporaryConfirmationToken = encryptionService.generateRandomString();
             unconfirmedTeacherRepository.saveUnconfirmedTeacher(teacher, temporaryConfirmationToken, Duration.ofHours(24));
 
-            List<String> adminEmails = registerRepository.findByIsAdminTrue()
+            List<String> adminEmails = registerRepository.findAllByIsAdminTrue()
                     .stream()
-                    .map(Teacher::getEmail)
-                    .collect(Collectors.toList());
+                    .map(t -> encryptionService.decrypt(t.getEmail(), t.getLogin()))
+                    .toList();
 
             if (!adminEmails.isEmpty()) {
                 sendConfirmationEmailsToAdmins(adminEmails, loginDto.getLogin(), temporaryConfirmationToken);
             }
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid login or password", e);
+            throw new IllegalArgumentException("Registration error: " + e.getMessage(), e);
         }
     }
 
@@ -91,7 +91,6 @@ public class RegisterService {
                 System.err.println("Failed to send email to " + adminEmail + ": " + e.getMessage());
             }
         }
-        System.out.println("Сообщения отправлены");
     }
 
     public void saveTeacher(String login, String token) {
@@ -101,20 +100,22 @@ public class RegisterService {
                 throw new IllegalArgumentException("Invalid login");
             if (!unconfirmedTeacher.getTemporaryConfirmationToken().equals(token))
                 throw new IllegalArgumentException("Invalid token");
+
+            unconfirmedTeacherRepository.deleteToken(login);
             Teacher teacher = unconfirmedTeacher.getTeacher();
             registerRepository.save(teacher);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid login or password", e);
+            throw new IllegalArgumentException("User Save error: " + e.getMessage(), e);
         }
     }
 
-    public void secretRegister(LoginDto loginDto) {
-        Teacher teacher = Teacher.builder()
-                .login(loginDto.getLogin())
-                .password(encryptionService.encrypt(loginDto.getPassword(), loginDto.getLogin()))
-                .email(loginDto.getEmail())
-                .isAdmin(true)
-                .build();
+    public void updateTeacher(LoginDto loginDto) {
+        Teacher teacher = registerRepository.findByLogin(loginDto.getLogin())
+                .orElse(Teacher.builder().login(loginDto.getLogin()).build());
+
+        teacher.setPassword(encryptionService.encrypt(loginDto.getPassword(), loginDto.getLogin()));
+        teacher.setEmail(encryptionService.encrypt(loginDto.getEmail(), loginDto.getLogin()));
+        teacher.setIsAdmin(loginDto.getIsAdmin());
 
         registerRepository.save(teacher);
     }

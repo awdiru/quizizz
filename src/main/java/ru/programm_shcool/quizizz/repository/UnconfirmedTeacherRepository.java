@@ -34,4 +34,9 @@ public class UnconfirmedTeacherRepository {
         String json = redisTemplate.opsForValue().get(key);
         return objectMapper.readValue(json, UnconfirmedTeacher.class);
     }
+
+    public void deleteToken(String username) {
+        String key = KEY_PREFIX + username;
+        redisTemplate.delete(key);
+    }
 }

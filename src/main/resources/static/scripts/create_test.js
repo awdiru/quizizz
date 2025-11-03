@@ -1,3 +1,5 @@
+const SERVER_ADDRESS = 'http://localhost:8080'
+
 document.addEventListener('DOMContentLoaded', function() {
     // Проверяем авторизацию при загрузке страницы
     if (!checkAuthOnLoad()) {
@@ -157,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Отправляем запрос на создание теста
         try {
-            const response = await fetchWithAuth('http://localhost:8080/tests/create', {
+            const response = await fetchWithAuth(SERVER_ADDRESS + '/tests/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

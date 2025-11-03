@@ -1,3 +1,5 @@
+const SERVER_ADDRESS = 'http://localhost:8080'
+
 document.addEventListener('DOMContentLoaded', function() {
     const loginButton = document.getElementById('loginButton');
     const registerButton = document.getElementById('registerButton');
@@ -22,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Выполняем запрос на вход
-        fetch('http://localhost:8080/login', {
+        fetch(SERVER_ADDRESS + '/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

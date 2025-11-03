@@ -13,10 +13,7 @@ import java.util.List;
 @Builder
 @ToString
 @Entity
-@Table(name = "tests",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"name", "directory_id"})
-        })
+@Table(name = "tests")
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

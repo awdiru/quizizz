@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface RegisterRepository extends JpaRepository<Teacher, Long> {
     Optional<Teacher> findByLogin(String login);
-    List<Teacher> findByIsAdminTrue();
+    List<Teacher> findAllByIsAdminTrue();
 }

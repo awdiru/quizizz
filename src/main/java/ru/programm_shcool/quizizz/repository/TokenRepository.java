@@ -27,16 +27,6 @@ public class TokenRepository {
         return token;
     }
 
-    public void deleteToken(String username) {
-        String key = KEY_PREFIX + username;
-        redisTemplate.delete(key);
-    }
-
-    public boolean existsToken(String username) {
-        String key = KEY_PREFIX + username;
-        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
-    }
-
     public boolean validateToken(String username, String token) {
         String storedToken = getToken(username);
         return storedToken != null && storedToken.equals(token);

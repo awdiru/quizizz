@@ -1,3 +1,5 @@
+const SERVER_ADDRESS = 'http://localhost:8080'
+
 document.addEventListener('DOMContentLoaded', function() {
     const loadingElement = document.getElementById('loading');
     const successElement = document.getElementById('success');
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function confirmRegistration(login, token) {
         try {
-            const response = await fetch(`http://localhost:8080/confirmed?login=${encodeURIComponent(login)}&token=${encodeURIComponent(token)}`, {
+            const response = await fetch(SERVER_ADDRESS + `/confirmed?login=${encodeURIComponent(login)}&token=${encodeURIComponent(token)}`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',

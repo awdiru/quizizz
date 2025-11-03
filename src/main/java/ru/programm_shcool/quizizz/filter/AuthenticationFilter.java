@@ -72,7 +72,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         return path.equals("/login") ||
                 path.equals("/register") ||
                 path.equals("/confirmed") ||
-                path.equals("/sregister") ||
+                path.equals("/update") ||
                 path.startsWith("/public/") ||
                 path.equals("/health");
     }
