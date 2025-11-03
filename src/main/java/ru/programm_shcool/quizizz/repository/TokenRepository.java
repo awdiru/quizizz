@@ -1,5 +1,7 @@
 package ru.programm_shcool.quizizz.repository;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -7,14 +9,10 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Repository
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class TokenRepository {
-
     private final RedisTemplate<String, String> redisTemplate;
     private static final String KEY_PREFIX = "auth_token:";
-
-    public TokenRepository(RedisTemplate<String, String> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     public void saveToken(String username, String token, Duration ttl) {
         String key = KEY_PREFIX + username;
@@ -23,7 +21,10 @@ public class TokenRepository {
 
     public String getToken(String username) {
         String key = KEY_PREFIX + username;
-        return redisTemplate.opsForValue().get(key);
+        String token = redisTemplate.opsForValue().get(key);
+        if (token == null)
+            throw new IllegalArgumentException("Unconfirmed user");
+        return token;
     }
 
     public void deleteToken(String username) {

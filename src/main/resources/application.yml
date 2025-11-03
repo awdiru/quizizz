@@ -1,5 +1,7 @@
 server:
   port: 8080
+app:
+  address: http://localhost:8080
 
 encryption:
   key: 18'XY5W^:@LhW^V8NiEUftJ@+jd|LWOS
@@ -7,6 +9,27 @@ encryption:
   transformation: AES/CBC/PKCS5Padding
 
 spring:
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: program-shcool@yandex.ru
+    password: jlkkhlccvtkygrgn
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          starttls:
+            enable: false
+
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+
   data:
     redis:
       host: localhost

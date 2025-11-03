@@ -18,7 +18,7 @@ public class EncryptionService {
     @Value("${encryption.transformation}")
     private String transformation;
 
-    @Value("${encryption.algorithm}")
+    @Value(value = "${encryption.algorithm}")
     private String algorithm;
 
     @Value("${encryption.key}")

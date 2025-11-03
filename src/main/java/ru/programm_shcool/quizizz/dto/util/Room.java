@@ -2,6 +2,8 @@ package ru.programm_shcool.quizizz.dto.util;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -9,8 +11,7 @@ import lombok.*;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class LoginDto {
-    private String login;
-    private String password;
-    private String email;
+public class Room {
+    private Long id;
+    private List<User> users;
 }

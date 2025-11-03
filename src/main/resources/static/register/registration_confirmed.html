@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение регистрации</title>
+    <link rel="stylesheet" href="../styles/default.css">
+    <link rel="stylesheet" href="../styles/register_confirmation.css">
+</head>
+<body>
+<div class="container">
+    <div id="loading" class="loading-container">
+        <h1>Подтверждение регистрации</h1>
+        <div class="spinner"></div>
+        <p>Идет подтверждение регистрации...</p>
+    </div>
+
+    <div id="success" class="success-container" style="display: none;">
+        <div class="success-icon">✓</div>
+        <h1>Регистрация подтверждена</h1>
+        <p id="successMessage"></p>
+        <button id="loginButton" class="login-btn">Перейти к входу</button>
+    </div>
+
+    <div id="error" class="error-container" style="display: none;">
+        <div class="error-icon">✗</div>
+        <h1>Ошибка подтверждения</h1>
+        <p id="errorMessage"></p>
+        <button id="retryButton" class="retry-btn">Попробовать снова</button>
+    </div>
+</div>
+
+<script src="../scripts/register_confirmation.js"></script>
+</body>
+</html>

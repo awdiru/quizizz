@@ -1,5 +1,5 @@
-/* Стили для страницы входа */
-.login-container {
+/* Стили для страницы регистрации */
+.register-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,7 +7,7 @@
     margin-top: 30px;
 }
 
-.login-input {
+.register-input {
     width: 300px;
     padding: 10px;
     border: 1px solid #ddd;
@@ -17,7 +17,7 @@
     box-sizing: border-box;
 }
 
-#loginButton {
+#registerButton {
     background-color: #bcbcbc;
     color: white;
     border: none;
@@ -28,11 +28,11 @@
     width: 300px;
 }
 
-#loginButton:hover {
+#registerButton:hover {
     background-color: #8f8f8f;
 }
 
-.register-btn {
+.back-btn {
     background-color: #bcbcbc;
     color: white;
     border: none;
@@ -43,6 +43,6 @@
     width: 300px;
 }
 
-.register-btn:hover {
+.back-btn:hover {
     background-color: #8f8f8f;
 }

@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const loginButton = document.getElementById('loginButton');
+    const registerButton = document.getElementById('registerButton');
     const nameInput = document.getElementById('nameInput');
     const passwordInput = document.getElementById('passwordInput');
 
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: name,
+                login: name,
                 password: password
             })
         })
@@ -58,6 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 passwordInput.value = '';
                 passwordInput.focus();
             });
+    });
+
+    // Обработчик кнопки регистрации
+    registerButton.addEventListener('click', function () {
+        window.location.href = '../register/register.html';
     });
 
     // Добавляем возможность нажимать Enter для входа

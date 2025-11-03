@@ -3,47 +3,76 @@ package ru.programm_shcool.quizizz.controller.list;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.programm_shcool.quizizz.annotation.PublicEndpoint;
 import ru.programm_shcool.quizizz.controller.AbstractController;
 import ru.programm_shcool.quizizz.dto.util.LoginDto;
 import ru.programm_shcool.quizizz.dto.util.LoginResponse;
 import ru.programm_shcool.quizizz.repository.TokenRepository;
 import ru.programm_shcool.quizizz.service.EncryptionService;
-import ru.programm_shcool.quizizz.service.PasswordService;
+import ru.programm_shcool.quizizz.service.RegisterService;
 
 import javax.security.auth.login.LoginException;
 import java.time.Duration;
 
 @RestController
-@RequestMapping("/login")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class LoginController extends AbstractController {
-    private final PasswordService passwordService;
+    private final RegisterService registerService;
     private final EncryptionService encryptionService;
     private final TokenRepository tokenRepository;
 
-    @PostMapping()
+    @PostMapping("/login")
     @PublicEndpoint
     public ResponseEntity<Object> login(@RequestBody LoginDto loginDto) {
         try {
-            String currentPassword = passwordService.getPassword();
-            if (currentPassword.equals(loginDto.getPassword())) {
-                String token = encryptionService.generateRandomString();
+            if (!registerService.validateTeacher(loginDto.getLogin(), loginDto.getPassword()))
+                throw new LoginException("Invalid password");
 
-                // Сохраняем токен в Redis на 24 часа с ключом = username
-                tokenRepository.saveToken(loginDto.getName(), token, Duration.ofHours(24));
+            String token = encryptionService.generateRandomString();
+            tokenRepository.saveToken(loginDto.getLogin(), token, Duration.ofHours(24));
 
-                return getResponse(LoginResponse.builder()
-                        .status(200)
-                        .message("Success")
-                        .token(token)
-                        .build());
-            }
-            throw new LoginException("Invalid password");
+            return getResponse(LoginResponse.builder()
+                    .status(200)
+                    .message("Login successful")
+                    .username(loginDto.getLogin())
+                    .token(token)
+                    .build());
+
+        } catch (Exception e) {
+            return getErrorResponse(e.getMessage(), 401);
+        }
+    }
+
+    @PostMapping("/register")
+    @PublicEndpoint
+    public ResponseEntity<Object> register(@RequestBody LoginDto loginDto) {
+        try {
+            registerService.registerTeacher(loginDto);
+            return getStandardResponse("Register successful. Wait for the employer's confirmation");
+        } catch (Exception e) {
+            return getErrorResponse(e.getMessage(), 401);
+        }
+    }
+
+    @GetMapping("/confirmed")
+    @PublicEndpoint
+    public ResponseEntity<Object> confirmRegister(@RequestParam String login,
+                                                  @RequestParam String token) {
+        try {
+            registerService.saveTeacher(login, token);
+            return getStandardResponse("User registration " + login + " has been successfully completed");
+        } catch (Exception e) {
+            return getErrorResponse(e.getMessage(), 401);
+        }
+    }
+
+    @PostMapping("/sregister")
+    @PublicEndpoint
+    public ResponseEntity<Object> confirmedRegister(@RequestBody LoginDto loginDto) {
+        try {
+            registerService.secretRegister(loginDto);
+            return getStandardResponse("Register successful");
         } catch (Exception e) {
             return getErrorResponse(e.getMessage(), 401);
         }

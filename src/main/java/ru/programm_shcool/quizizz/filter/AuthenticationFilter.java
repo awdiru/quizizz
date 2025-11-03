@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.programm_shcool.quizizz.repository.TokenRepository;
 
 import java.io.IOException;
+import java.time.Duration;
 
 @Component
 @RequiredArgsConstructor
@@ -51,6 +52,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        tokenRepository.saveToken(username, token, Duration.ofHours(24));
+
         request.setAttribute("username", username);
         filterChain.doFilter(request, response);
     }
@@ -67,6 +70,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private boolean isPublicApi(String path) {
         return path.equals("/login") ||
+                path.equals("/register") ||
+                path.equals("/confirmed") ||
+                path.equals("/sregister") ||
                 path.startsWith("/public/") ||
                 path.equals("/health");
     }
