@@ -105,13 +105,7 @@ POST /directory/create
 Тело запроса:
 ```json
 {
-  "path": "string",
-  "children": [
-    {
-      "name": "string",
-      "isDirectory": "boolean"
-    }
-  ]
+  "path": "string"
 }
 ```
 Успешный ответ:

@@ -72,7 +72,7 @@ public class LoginController extends AbstractController {
     public ResponseEntity<Object> confirmedRegister(@RequestBody LoginDto loginDto) {
         try {
             registerService.updateTeacher(loginDto);
-            return getStandardResponse("Register successful");
+            return getStandardResponse("Updating successful");
         } catch (Exception e) {
             return getErrorResponse(e.getMessage(), 401);
         }
