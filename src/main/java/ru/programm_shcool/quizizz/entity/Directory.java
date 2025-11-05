@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("DIRECTORY")
 public class Directory extends Element {
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     @ToString.Exclude
     private List<Element> children = new ArrayList<>();

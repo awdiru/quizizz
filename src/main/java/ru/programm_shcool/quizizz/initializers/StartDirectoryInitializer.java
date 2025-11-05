@@ -21,6 +21,7 @@ public class StartDirectoryInitializer {
             Directory directory = Directory.builder()
                     .name(START_DIRECTORY_NAME)
                     .parent(null)
+                    .created(null)
                     .build();
             elementRepository.save(directory);
         }

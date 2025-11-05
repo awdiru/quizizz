@@ -13,5 +13,5 @@ import java.util.List;
 @EqualsAndHashCode
 public class Room {
     private Long id;
-    private List<User> users;
+    private List<Guest> guests;
 }

@@ -1,7 +1,6 @@
 package ru.programm_shcool.quizizz.service;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.programm_shcool.quizizz.entity.Directory;
@@ -18,7 +17,7 @@ public class ElementService {
 
     public Directory getStartDirectory() {
         Element element = elementRepository.findFirstByNameAndType(START_DIRECTORY_NAME, ElementType.DIRECTORY)
-                .orElseGet(() -> save(START_DIRECTORY_NAME, null));
+                .orElseThrow(() -> new RuntimeException("No start directory found"));
 
         if (element instanceof Directory)
             return (Directory) element;
@@ -36,18 +35,19 @@ public class ElementService {
         if (dirPath.length == 1 && dirPath[0].equals(startDirectory.getName()))
             return startDirectory;
 
-        if (dirPath.length == 1)
-            throw new IllegalArgumentException("An incorrect path has been specified: the path cannot consist of a single folder");
-
-
         Element element = startDirectory;
         int startIndex = dirPath[0].equals(startDirectory.getName()) ? 1 : 0;
         for (int i = startIndex; i < dirPath.length; i++) {
             int finalI = i;
-            element = startDirectory.getChildren().stream()
-                    .filter(e -> e.getName().equals(dirPath[finalI]))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Element " + dirPath[finalI] + " not found"));
+            if (element instanceof Directory directory) {
+                element = directory.getChildren().stream()
+                        .filter(e -> e.getName().equals(dirPath[finalI]))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Element " + dirPath[finalI] + " not found"));
+
+            } else if (element.getName().equals(dirPath[finalI])) {
+                return element;
+            } else throw new IllegalArgumentException("Element " + dirPath[finalI] + " not found");
         }
         return element;
     }
@@ -68,21 +68,5 @@ public class ElementService {
     public String getName(String path) {
         String[] dirPath = path.split("/");
         return dirPath[dirPath.length - 1];
-    }
-
-    public Directory save(String name, Directory parent) {
-        Directory directory = Directory.builder()
-                .name(name)
-                .parent(parent)
-                .build();
-
-        Directory savedDirectory = elementRepository.save(directory);
-
-        if (parent != null) {
-            Hibernate.initialize(parent.getChildren());
-            parent.getChildren().add(savedDirectory);
-        }
-
-        return savedDirectory;
     }
 }

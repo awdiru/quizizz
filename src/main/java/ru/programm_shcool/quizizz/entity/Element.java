@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -32,4 +34,7 @@ public abstract class Element {
     @Enumerated(EnumType.STRING)
     @Column(name = "type", insertable=false, updatable=false)
     protected ElementType type;
+
+    @Column(name = "created")
+    protected LocalDateTime created;
 }

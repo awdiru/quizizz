@@ -11,5 +11,6 @@ import lombok.*;
 @EqualsAndHashCode
 public class ElementDto {
     private String name;
+    private String created;
     private boolean isDirectory;
 }

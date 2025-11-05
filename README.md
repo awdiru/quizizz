@@ -130,6 +130,7 @@ GET /directory/get?path={path}
   "children": [
     {
       "name": "string",
+      "created": "2023-11-15T10:30:00",
       "isDirectory": "boolean"
     }
   ]
@@ -223,7 +224,6 @@ GET /tests/get?path={path}
       "answers": [
         {
           "answer": "string",
-          "number": "integer",
           "isRight": "boolean"
         }
       ]

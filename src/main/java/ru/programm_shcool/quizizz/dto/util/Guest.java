@@ -9,6 +9,6 @@ import lombok.*;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class User {
+public class Guest {
     private String name;
 }

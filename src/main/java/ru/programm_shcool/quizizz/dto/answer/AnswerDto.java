@@ -11,6 +11,5 @@ import lombok.*;
 @EqualsAndHashCode
 public class AnswerDto {
     private String answer;
-    private int number;
     private boolean isRight;
 }

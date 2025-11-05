@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import ru.programm_shcool.quizizz.entity.Teacher;
+import ru.programm_shcool.quizizz.entity.User;
 import ru.programm_shcool.quizizz.repository.TeacherRepository;
 import ru.programm_shcool.quizizz.service.EncryptionService;
 
@@ -25,7 +25,7 @@ public class AdminInitializer {
     @EventListener(ContextRefreshedEvent.class)
     public void initAdmin() {
         if (teacherRepository.findByLogin(adminLogin).isEmpty()) {
-            Teacher admin = Teacher.builder()
+            User admin = User.builder()
                     .login(adminLogin)
                     .password(encryptionService.encrypt(adminPassword, adminLogin))
                     .isAdmin(true)

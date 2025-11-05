@@ -1,7 +1,7 @@
-package ru.programm_shcool.quizizz.dto.teacher;
+package ru.programm_shcool.quizizz.dto.users;
 
 import lombok.*;
-import ru.programm_shcool.quizizz.entity.Teacher;
+import ru.programm_shcool.quizizz.entity.User;
 
 @Getter
 @Setter
@@ -10,7 +10,7 @@ import ru.programm_shcool.quizizz.entity.Teacher;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class UnconfirmedTeacher {
-    private Teacher teacher;
+public class UnconfirmedUserDto {
+    private User user;
     private String temporaryConfirmationToken;
 }

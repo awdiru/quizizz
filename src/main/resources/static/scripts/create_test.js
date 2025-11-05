@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 answers.push({
                     answer: answerText,
-                    number: answerIndex + 1,
                     right: isCorrect
                 });
             });

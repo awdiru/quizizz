@@ -7,9 +7,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import ru.programm_shcool.quizizz.dto.teacher.UnconfirmedTeacher;
+import ru.programm_shcool.quizizz.dto.users.UnconfirmedUserDto;
 import ru.programm_shcool.quizizz.dto.util.LoginDto;
-import ru.programm_shcool.quizizz.entity.Teacher;
+import ru.programm_shcool.quizizz.entity.User;
 import ru.programm_shcool.quizizz.repository.TeacherRepository;
 import ru.programm_shcool.quizizz.repository.UnconfirmedTeacherRepository;
 
@@ -31,10 +31,10 @@ public class RegisterService {
     private String fromEmail;
 
     public boolean validateTeacher(String login, String password) {
-        Teacher teacher = teacherRepository.findByLogin(login)
+        User user = teacherRepository.findByLogin(login)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid login"));
 
-        String decryptedPassword = encryptionService.decrypt(teacher.getPassword(), login);
+        String decryptedPassword = encryptionService.decrypt(user.getPassword(), login);
         return decryptedPassword.equals(password);
     }
 
@@ -43,14 +43,14 @@ public class RegisterService {
             if (loginDto.getLogin().length() < 2 || loginDto.getLogin().length() > 31)
                 throw new IllegalArgumentException("Login length must be between 2 and 30 characters");
 
-            Teacher teacher = Teacher.builder()
+            User user = User.builder()
                     .login(loginDto.getLogin())
                     .password(encryptionService.encrypt(loginDto.getPassword(), loginDto.getLogin()))
                     .email(encryptionService.encrypt(loginDto.getEmail(), loginDto.getLogin()))
                     .build();
 
             String temporaryConfirmationToken = encryptionService.generateRandomString();
-            unconfirmedTeacherRepository.saveUnconfirmedTeacher(teacher, temporaryConfirmationToken, Duration.ofHours(24));
+            unconfirmedTeacherRepository.saveUnconfirmedTeacher(user, temporaryConfirmationToken, Duration.ofHours(24));
 
             List<String> adminEmails = teacherRepository.findAllByIsAdminTrue()
                     .stream()
@@ -94,28 +94,28 @@ public class RegisterService {
 
     public void saveTeacher(String login, String token) {
         try {
-            UnconfirmedTeacher unconfirmedTeacher = unconfirmedTeacherRepository.getUnconfirmedTeacher(login);
-            if (unconfirmedTeacher == null)
+            UnconfirmedUserDto unconfirmedUserDto = unconfirmedTeacherRepository.getUnconfirmedTeacher(login);
+            if (unconfirmedUserDto == null)
                 throw new IllegalArgumentException("Invalid login");
-            if (!unconfirmedTeacher.getTemporaryConfirmationToken().equals(token))
+            if (!unconfirmedUserDto.getTemporaryConfirmationToken().equals(token))
                 throw new IllegalArgumentException("Invalid token");
 
             unconfirmedTeacherRepository.deleteToken(login);
-            Teacher teacher = unconfirmedTeacher.getTeacher();
-            teacherRepository.save(teacher);
+            User user = unconfirmedUserDto.getUser();
+            teacherRepository.save(user);
         } catch (Exception e) {
             throw new IllegalArgumentException("User Save error: " + e.getMessage(), e);
         }
     }
 
     public void updateTeacher(LoginDto loginDto) {
-        Teacher teacher = teacherRepository.findByLogin(loginDto.getLogin())
-                .orElse(Teacher.builder().login(loginDto.getLogin()).build());
+        User user = teacherRepository.findByLogin(loginDto.getLogin())
+                .orElse(User.builder().login(loginDto.getLogin()).build());
 
-        teacher.setPassword(encryptionService.encrypt(loginDto.getPassword(), loginDto.getLogin()));
-        teacher.setEmail(encryptionService.encrypt(loginDto.getEmail(), loginDto.getLogin()));
-        teacher.setIsAdmin(loginDto.getIsAdmin());
+        user.setPassword(encryptionService.encrypt(loginDto.getPassword(), loginDto.getLogin()));
+        user.setEmail(encryptionService.encrypt(loginDto.getEmail(), loginDto.getLogin()));
+        user.setIsAdmin(loginDto.getIsAdmin());
 
-        teacherRepository.save(teacher);
+        teacherRepository.save(user);
     }
 }

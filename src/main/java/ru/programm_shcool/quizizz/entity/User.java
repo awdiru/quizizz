@@ -10,8 +10,8 @@ import lombok.*;
 @Builder
 @ToString
 @Entity
-@Table(name = "teachers")
-public class Teacher {
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
