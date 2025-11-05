@@ -2,6 +2,9 @@ server:
   port: 8080
 app:
   address: http://localhost:8080
+  admin_login: admin
+  admin_password: password
+  admin_email: awdiru@gmail.com
 
 encryption:
   key: 18'XY5W^:@LhW^V8NiEUftJ@+jd|LWOS

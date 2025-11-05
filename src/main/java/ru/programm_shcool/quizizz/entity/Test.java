@@ -2,30 +2,19 @@ package ru.programm_shcool.quizizz.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 @Entity
-@Table(name = "tests")
-public class Test {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "directory_id")
-    private Directory directory;
-
+@DiscriminatorValue("FILE")
+public class Test extends Element {
     @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
     @Builder.Default
     @ToString.Exclude

@@ -6,10 +6,10 @@ import ru.programm_shcool.quizizz.dto.util.StandardResponse;
 
 public class AbstractController {
     protected ResponseEntity<Object> getStandardResponse(String message) {
-        return getErrorResponse(message, 200);
+        return getResponse(message, 200);
     }
 
-    protected ResponseEntity<Object> getErrorResponse(String message, int code) {
+    protected ResponseEntity<Object> getResponse(String message, int code) {
         StandardResponse response = StandardResponse.builder()
                 .status(code)
                 .message(message)
@@ -18,7 +18,7 @@ public class AbstractController {
         return ResponseEntity.status(code).body(response);
     }
 
-    protected ResponseEntity<Object> getResponse(Object response) {
+    protected ResponseEntity<Object> getOkResponse(Object response) {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

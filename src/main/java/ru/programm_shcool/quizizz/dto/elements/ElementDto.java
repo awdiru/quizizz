@@ -1,4 +1,4 @@
-package ru.programm_shcool.quizizz.dto.directory;
+package ru.programm_shcool.quizizz.dto.elements;
 
 import lombok.*;
 

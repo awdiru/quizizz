@@ -1,4 +1,4 @@
-package ru.programm_shcool.quizizz.dto.test;
+package ru.programm_shcool.quizizz.dto.elements.test;
 
 import lombok.*;
 import ru.programm_shcool.quizizz.dto.question.QuestionDto;

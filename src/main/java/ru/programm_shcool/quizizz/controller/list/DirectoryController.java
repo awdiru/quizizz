@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.programm_shcool.quizizz.controller.AbstractController;
-import ru.programm_shcool.quizizz.dto.directory.DirectoryDto;
+import ru.programm_shcool.quizizz.dto.elements.RenameElementDto;
+import ru.programm_shcool.quizizz.dto.elements.directory.DirectoryDto;
 import ru.programm_shcool.quizizz.service.DirectoryService;
 
 @RestController
@@ -20,7 +21,7 @@ public class DirectoryController extends AbstractController {
             directoryService.save(directoryDto);
             return getStandardResponse("Directory created");
         } catch (Exception e) {
-            return getErrorResponse(e.getMessage(), 400);
+            return getResponse(e.getMessage(), 400);
         }
     }
 
@@ -28,9 +29,19 @@ public class DirectoryController extends AbstractController {
     public ResponseEntity<Object> getDirectory(@RequestParam String path) {
         try {
             DirectoryDto directoryDto = directoryService.getDirectory(path);
-            return getResponse(directoryDto);
+            return getOkResponse(directoryDto);
         } catch (Exception e) {
-            return getErrorResponse(e.getMessage(), 400);
+            return getResponse(e.getMessage(), 400);
+        }
+    }
+
+    @PatchMapping("/rename")
+    public ResponseEntity<Object> renameDirectory(@RequestBody RenameElementDto directoryDto) {
+        try {
+            directoryService.renameDirectory(directoryDto);
+            return getOkResponse("Directory renamed");
+        } catch (Exception e) {
+            return getResponse(e.getMessage(), 400);
         }
     }
 
@@ -40,7 +51,7 @@ public class DirectoryController extends AbstractController {
             directoryService.removeDirectory(path);
             return getStandardResponse("Directory removed");
         } catch (Exception e) {
-            return getErrorResponse(e.getMessage(), 400);
+            return getResponse(e.getMessage(), 400);
         }
     }
 }

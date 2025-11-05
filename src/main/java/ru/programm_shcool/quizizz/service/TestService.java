@@ -4,44 +4,39 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.programm_shcool.quizizz.dto.answer.AnswerDto;
+import ru.programm_shcool.quizizz.dto.elements.RenameElementDto;
+import ru.programm_shcool.quizizz.dto.elements.test.TestDto;
 import ru.programm_shcool.quizizz.dto.question.QuestionDto;
-import ru.programm_shcool.quizizz.dto.test.TestDto;
-import ru.programm_shcool.quizizz.entity.Answer;
-import ru.programm_shcool.quizizz.entity.Directory;
-import ru.programm_shcool.quizizz.entity.Question;
-import ru.programm_shcool.quizizz.entity.Test;
+import ru.programm_shcool.quizizz.entity.*;
 import ru.programm_shcool.quizizz.repository.AnswerRepository;
+import ru.programm_shcool.quizizz.repository.ElementRepository;
 import ru.programm_shcool.quizizz.repository.QuestionRepository;
-import ru.programm_shcool.quizizz.repository.TestRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class TestService {
-    private final TestRepository testRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-    private final DirectoryService directoryService;
+    private final ElementRepository elementRepository;
+
+    private final ElementService elementService;
 
     public void createTest(TestDto testDto) {
-        Directory directory = directoryService.getParent(testDto.getPath(), directoryService.getStartDirectory());
+        Directory directory = elementService.getParent(testDto.getPath());
         Test test = Test.builder()
-                .name(directoryService.getName(testDto.getPath()))
-                .directory(directory)
+                .name(elementService.getName(testDto.getPath()))
+                .parent(directory)
                 .build();
-        Test saved = testRepository.save(test);
+        Test saved = elementRepository.save(test);
 
         for (QuestionDto questionDto : testDto.getQuestions())
             saveQuestion(saved, questionDto);
     }
 
     public TestDto getTest(String path) {
-        Directory directory = directoryService.getParent(path, directoryService.getStartDirectory());
-
-        Test test = testRepository.findByNameAndDirectory(directoryService.getName(path), directory)
-                .orElseThrow(() -> new RuntimeException("Test not found"));
-
+        Test test = getTestToPath(path);
         List<QuestionDto> questions = test.getQuestions().stream()
                 .map(q ->
                         QuestionDto.builder()
@@ -61,6 +56,24 @@ public class TestService {
                 .path(path)
                 .questions(questions)
                 .build();
+    }
+
+    public void removeTest(String path) {
+        Test test = getTestToPath(path);
+        elementRepository.delete(test);
+    }
+
+    public void renameTest(RenameElementDto renameTestDto) {
+        Test test = getTestToPath(elementService.getName(renameTestDto.getPath()));
+        test.setName(renameTestDto.getNewName());
+        elementRepository.save(test);
+    }
+
+    private Test getTestToPath(String path) {
+        Element element = elementService.get(path);
+        if (!(element instanceof Test test))
+            throw new IllegalArgumentException("Element " + path + " is not a Test");
+        return test;
     }
 
     private void saveQuestion(Test test, QuestionDto questionDto) {

@@ -32,7 +32,7 @@ public class LoginController extends AbstractController {
             String token = encryptionService.generateRandomString();
             tokenRepository.saveToken(loginDto.getLogin(), token, Duration.ofHours(24));
 
-            return getResponse(LoginResponse.builder()
+            return getOkResponse(LoginResponse.builder()
                     .status(200)
                     .message("Login successful")
                     .username(loginDto.getLogin())
@@ -40,7 +40,7 @@ public class LoginController extends AbstractController {
                     .build());
 
         } catch (Exception e) {
-            return getErrorResponse(e.getMessage(), 401);
+            return getResponse(e.getMessage(), 401);
         }
     }
 
@@ -51,7 +51,7 @@ public class LoginController extends AbstractController {
             registerService.registerTeacher(loginDto);
             return getStandardResponse("Register successful. Wait for the employer's confirmation");
         } catch (Exception e) {
-            return getErrorResponse(e.getMessage(), 401);
+            return getResponse(e.getMessage(), 401);
         }
     }
 
@@ -63,7 +63,7 @@ public class LoginController extends AbstractController {
             registerService.saveTeacher(login, token);
             return getStandardResponse("User registration " + login + " has been successfully completed");
         } catch (Exception e) {
-            return getErrorResponse(e.getMessage(), 401);
+            return getResponse(e.getMessage(), 401);
         }
     }
 
@@ -74,7 +74,7 @@ public class LoginController extends AbstractController {
             registerService.updateTeacher(loginDto);
             return getStandardResponse("Updating successful");
         } catch (Exception e) {
-            return getErrorResponse(e.getMessage(), 401);
+            return getResponse(e.getMessage(), 401);
         }
     }
 }

@@ -1,6 +1,7 @@
-package ru.programm_shcool.quizizz.dto.directory;
+package ru.programm_shcool.quizizz.dto.elements.directory;
 
 import lombok.*;
+import ru.programm_shcool.quizizz.dto.elements.ElementDto;
 
 import java.util.List;
 

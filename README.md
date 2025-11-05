@@ -135,6 +135,28 @@ GET /directory/get?path={path}
   ]
 }
 ```
+#### Переименование директории
+PATCH /directory/rename
+
+Заголовки:
+- X-Username: string
+- X-Token: string
+
+Тело запроса:
+```json
+{
+  "path": "string",
+  "newName" : "string"
+}
+```
+Успешный ответ:
+```json
+{
+  "timestamp": "2023-11-15T10:30:00",
+  "status": 200,
+  "message": "Directory renamed"
+}
+```
 #### Удаление директории
 DELETE /directory/remove?path={path}
 
@@ -207,6 +229,43 @@ GET /tests/get?path={path}
       ]
     }
   ]
+}
+```
+#### Удаление теста
+DELETE /tests/remove?path={path}
+
+Заголовки:
+- X-Username: string
+- X-Token: string
+
+Успешный ответ:
+```json
+{
+  "timestamp": "2023-11-15T10:30:00",
+  "status": 200,
+  "message": "Test deleted"
+}
+```
+#### Переименование теста
+PATCH /tests/rename
+
+Заголовки:
+- X-Username: string
+- X-Token: string
+
+Тело запроса:
+```json
+{
+  "path": "string",
+  "newName": "string"
+}
+```
+Успешный ответ:
+```json
+{
+  "timestamp": "2023-11-15T10:30:00",
+  "status": 200,
+  "message": "Test renamed"
 }
 ```
 ## Коды статусов
